@@ -1,19 +1,14 @@
-require('dotenv').config(); //Load enviorment variables
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const cors = require('cors'); // This is useful for allowing requests from your frontend
 const session = require('express-session'); // This is useful for session management
-const db = require('./config/db'); //import database connection
-const passport = require('passport'); // This is useful for authentication
-const LocalStrategy = require('passport-local').Strategy; // This is useful for local authentication
+const passport = require('passport'); // For authentication
+const LocalStrategy = require('passport-local').Strategy; // Local authentication strategy
+const sequelize = require('./config/db'); // Import Sequelize instance from db.js
 const authRoutes = require('./routes/auth'); // Import the auth routes
 
 const app = express();
 const PORT = process.env.PORT || 5000; // Set the port, defaulting to 5000
-
-//testing db connection
-db.connect()
-    .then(() => console.log('Database connected successfully'))
-    .catch(err => console.error('Database connection error', err.stack));
 
 // Middleware
 app.use(cors()); // Enable CORS
@@ -24,19 +19,29 @@ app.use(session({
     saveUninitialized: false
 }));
 
-//initilize passport
+// Initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-//passport local strategy configuration
+// Authenticate Sequelize
+sequelize.authenticate()
+    .then(() => console.log('Sequelize connected to the database'))
+    .catch(err => console.error('Error connecting to the database:', err));
+
+// Synchronize all models (this will also sync the User model)
+sequelize.sync()
+    .then(() => console.log('All models synchronized successfully'))
+    .catch(err => console.error('Error synchronizing models:', err));
+
+// Passport local strategy configuration
 passport.use(new LocalStrategy(
     async (username, password, done) => {
-        const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        const user = await User.findOne({ where: { username } });
         if (!user) return done(null, false);
 
-        const isMatch = await bcrypt.compare(password, user.rows[0].password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
-            return done(null, user.rows[0]);
+            return done(null, user);
         } else {
             return done(null, false);
         }
@@ -50,11 +55,11 @@ passport.serializeUser((user, done) => {
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
-    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    done(null, user.rows[0]);
+    const user = await User.findByPk(id);
+    done(null, user);
 });
 
-//auth routes
+// Auth routes
 app.use('/auth', authRoutes);
 
 // Basic route

@@ -1,15 +1,26 @@
-require('dotenv').config();//Load enviorment variables
-const { Pool } = require('pg');// Import the Pool object from the pg package
+require('dotenv').config(); // Load environment variables
+const { Sequelize } = require('sequelize'); // Import Sequelize
 
-//check if necessary environment variables are provided
+// Ensure necessary environment variables are provided
 if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_HOST || !process.env.DB_NAME) {
     console.error('Required environment variables are not provided');
+    process.exit(1); // Exit if env variables are missing
 }
 
-//create a new pool instance
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME}`,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false //Use SSL in production
+// Create a new Sequelize instance
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: 'postgres',
+    port: process.env.DB_PORT || 5432,
+    logging: false, // Disable logging SQL queries (optional)
+    dialectOptions: {
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false // Use SSL in production
+    }
 });
 
-module.exports = pool; //Export the pool object
+// Test the connection
+sequelize.authenticate()
+    .then(() => console.log('Sequelize connected to the database'))
+    .catch(err => console.error('Error connecting to the database:', err));
+
+module.exports = sequelize; // Export Sequelize instance
