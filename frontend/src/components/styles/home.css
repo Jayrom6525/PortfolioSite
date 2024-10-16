@@ -1,0 +1,128 @@
+/* src/components/styles/home.css */
+.home-container {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .home-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .home-container p {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  .services, .testimonials, .cta {
+    margin-top: 40px;
+  }
+  
+  .services h2, .testimonials h2, .cta h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .services ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .services li {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .testimonials blockquote {
+    font-size: 1rem;
+    color: #666;
+    font-style: italic;
+    margin: 20px 0;
+  }
+  
+  .cta button {
+    background-color: #282c34;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .cta button:hover {
+    background-color: #575757;
+  }
+/* Styles for the Services Section */
+.services-container {
+  display: flex;
+  overflow-x: auto; /* Enables horizontal scroll */
+  padding: 20px;
+  gap: 20px; /* Space between cards */
+  scroll-snap-type: x mandatory; /* Smooth scroll snapping */
+}
+
+.service-card {
+  min-width: 250px; /* Set a minimum width for each card */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start; /* Align cards with container */
+  flex-shrink: 0; /* Prevent shrinking */
+  transition: transform 0.3s ease-in-out; /* Smooth scaling on hover */
+}
+
+.service-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.service-card h3 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.service-card p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.service-card:hover {
+  transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+
+/* Scroll Button Styles */
+.scroll-btn {
+  background-color: #282c34;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.scroll-btn.left {
+  left: 10px;
+}
+
+.scroll-btn.right {
+  right: 10px;
+}
+
+.scroll-btn:hover {
+  background-color: #575757;
+}
