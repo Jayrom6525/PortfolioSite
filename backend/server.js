@@ -11,7 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000; // Set the port, defaulting to 5000
 
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from the React app
+    credentials: true
+})); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -60,7 +63,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Auth routes
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
