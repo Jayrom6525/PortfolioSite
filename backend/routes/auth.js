@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs'); // Ensure you have bcrypt for password hashing
 const passport = require('passport');
-const pool = require('../config/db'); // Assuming this is your DB connection
+const pool = require('../config/db'); // Import the pool instance from pg
 const router = express.Router();
 
 // Registration endpoint
@@ -26,12 +26,12 @@ router.post('/register', async (req, res) => {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log('Hashed password:', hashedPassword); 
+        console.log('Hashed password:', hashedPassword);
 
         // Insert new user into the database
         console.log('Inserting user into the database...');
         await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [username, email, hashedPassword]);
-        
+
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('Error during registration:', error); // More descriptive error logging

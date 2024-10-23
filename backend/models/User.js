@@ -1,22 +1,18 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Import Sequelize instance from db.js
+require('dotenv').config(); // Load environment variables
+const { Pool } = require('pg'); // Import Pool from pg
 
-// Define the User model
-const User = sequelize.define('User', {
-    username: {
-        type: DataTypes.STRING,
-        unique: true, // Ensures username is unique
-        allowNull: false, // Username cannot be null
-    },
-    email: {
-        type: DataTypes.STRING,
-        unique: true, // Ensures email is unique
-        allowNull: false, // Email cannot be null
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false, // Password cannot be null
-    },
+// Ensure necessary environment variables are provided
+if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_HOST || !process.env.DB_NAME) {
+  throw new Error('Missing necessary environment variables for database connection');
+}
+
+// Create a new Pool instance
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
 });
 
-module.exports = User; // Export the User model
+module.exports = pool;
