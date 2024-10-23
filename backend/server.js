@@ -4,8 +4,9 @@ const cors = require('cors'); // This is useful for allowing requests from your 
 const session = require('express-session'); // This is useful for session management
 const passport = require('passport'); // For authentication
 const LocalStrategy = require('passport-local').Strategy; // Local authentication strategy
-const sequelize = require('./config/db'); // Import Sequelize instance from db.js
+const pool = require('./config/db'); // Import the pool instance from pg
 const authRoutes = require('./routes/auth'); // Import the auth routes
+const bcrypt = require('bcryptjs'); // For password hashing
 
 const app = express();
 const PORT = process.env.PORT || 5000; // Set the port, defaulting to 5000
@@ -26,27 +27,22 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Authenticate Sequelize
-sequelize.authenticate()
-    .then(() => console.log('Sequelize connected to the database'))
-    .catch(err => console.error('Error connecting to the database:', err));
-
-// Synchronize all models (this will also sync the User model)
-sequelize.sync()
-    .then(() => console.log('All models synchronized successfully'))
-    .catch(err => console.error('Error synchronizing models:', err));
-
 // Passport local strategy configuration
 passport.use(new LocalStrategy(
     async (username, password, done) => {
-        const user = await User.findOne({ where: { username } });
-        if (!user) return done(null, false);
+        try {
+            const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+            const user = result.rows[0];
+            if (!user) return done(null, false);
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (isMatch) {
-            return done(null, user);
-        } else {
-            return done(null, false);
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (isMatch) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        } catch (err) {
+            return done(err);
         }
     }
 ));
@@ -58,8 +54,13 @@ passport.serializeUser((user, done) => {
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
-    const user = await User.findByPk(id);
-    done(null, user);
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+        const user = result.rows[0];
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
 });
 
 // Auth routes
