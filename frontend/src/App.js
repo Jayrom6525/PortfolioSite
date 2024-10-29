@@ -1,40 +1,49 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Register from './components/auth/Register'; // Import the Register component
-import Login from './components/auth/Login'; // Import the Login component
-import Home from './components/auth/Home'; // Import the Home component
-import NavBar from './components/Navbar'; // Import the NavBar component
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import NavBar from './components/Navbar';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import Home from './components/auth/Home';
+import Profile from './components/auth/Profile';
 
 import './App.css'; // Import main App styles
 import './components/styles/auth.css'; // Correct path to your auth.css file
 import './components/styles/home.css'; // Import the home styles
 
-function App() {
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user is logged in by checking the presence of an auth token
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Clear the auth token from localStorage
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    navigate('/login'); // Redirect to the login page
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         John Romagno Personal Training
       </header>
       
-      <Router>
-        {/* Navigation bar appears on all pages */}
-        <NavBar />
-        
-        {/* Define the route structure */}
-        <Routes>
-          {/* Route for the home page */}
-          <Route path="/" element={<Home />} />
-
-          {/* Add the route for the registration page */}
-          <Route path="/register" element={<Register />} />
-          
-          {/* Add the route for the login page */}
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
+      <NavBar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;

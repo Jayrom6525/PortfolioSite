@@ -1,24 +1,60 @@
-// src/components/auth/Login.js
 import React, { useState } from 'react';
-import '../styles/login.css'; // Correct path to login.css
-// Ensure you have a separate CSS file for styling
+import { useNavigate } from 'react-router-dom'; // For redirecting after successful login
+import '../styles/login.css'; // Ensure correct path to your login.css
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
   // State to manage form inputs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null); // To handle error messages
+  const navigate = useNavigate(); // For programmatic navigation
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
-    // Add login functionality (e.g., call API)
-    console.log('Login form submitted:', { email, password });
+  // Dummy login logic, replace with an actual API call to backend
+  const loginUser = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:5000/login', { // Replace with your backend URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include', // This allows sending cookies for session management
+      });
+  
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        localStorage.setItem('authToken', data.token); // Store token in localStorage
+        return true; // Login successful
+      } else {
+        setError('Invalid email or password');
+        return false; // Login failed
+      }
+    } catch (error) {
+      setError('Error logging in. Please try again.');
+      console.error('Login Error:', error);
+      return false; // Login failed due to an error
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Call login function to authenticate user
+    const isAuthenticated = await loginUser(email, password);
+
+    if (isAuthenticated) {
+      // Redirect to homepage on successful login
+      navigate('/');
+    }
   };
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      {error && <p className="error-message">{error}</p>} {/* Display error messages */}
+      <form onSubmit={handleLogin}>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
@@ -29,7 +65,7 @@ const Login = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
