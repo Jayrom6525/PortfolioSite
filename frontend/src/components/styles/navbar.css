@@ -5,7 +5,7 @@
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 1100; /* Ensure navbar is above the header */
 }
 
 .navbar-links {
@@ -43,7 +43,7 @@
 
 .profile-dropdown {
   position: relative;
-  z-index: 1100; /* Ensure dropdown is above other elements */
+  z-index: 1200; /* Ensure dropdown is above other elements */
 }
 
 .dropdown-menu {
@@ -57,7 +57,7 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-  z-index: 1100; /* Ensure dropdown is above other elements */
+  z-index: 1200; /* Ensure dropdown is above other elements */
 }
 
 .dropdown-menu li {
