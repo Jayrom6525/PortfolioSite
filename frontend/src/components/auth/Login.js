@@ -12,7 +12,7 @@ const Login = ({ setIsLoggedIn }) => {
   // Dummy login logic, replace with an actual API call to backend
   const loginUser = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/login', { // Replace with your backend URL
+      const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,8 +24,11 @@ const Login = ({ setIsLoggedIn }) => {
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message);
+        console.log('Login successful:', data); //debugging
+        alert(data.message); //display success message
         localStorage.setItem('authToken', data.token); // Store token in localStorage
+        setIsLoggedIn(true); // set authenticaion state to true
+        navigate('/'); // Redirect to homepage on successful login
         return true; // Login successful
       } else {
         setError('Invalid email or password');
