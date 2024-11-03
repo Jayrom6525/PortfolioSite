@@ -1,9 +1,11 @@
-// src/components/Home.js
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import '../styles/home.css'; // Import home styles
+import ServiceModal from '../ServiceModal';
 
 const Home = () => {
   const containerRef = useRef(null); // Reference for scroll container
+  const [selectedService, setSelectedService] = useState(null); // State for selected service
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const scrollLeft = () => {
     containerRef.current.scrollBy({ left: -250, behavior: 'smooth' }); // Scroll left
@@ -11,6 +13,39 @@ const Home = () => {
 
   const scrollRight = () => {
     containerRef.current.scrollBy({ left: 250, behavior: 'smooth' }); // Scroll right
+  };
+
+  const services = [
+    {
+      img: 'path/to/personal-training.jpg',
+      title: 'Personal Training',
+      description: 'One-on-one coaching to help you achieve your fitness goals.',
+    },
+    {
+      img: 'path/to/nutrition-guidance.jpg',
+      title: 'Nutritional Guidance',
+      description: 'Customized meal plans to complement your fitness routine.',
+    },
+    {
+      img: 'path/to/program-design.jpg',
+      title: 'Program Design',
+      description: 'Personalized training programs to fit your lifestyle and goals.',
+    },
+  ];
+
+  const handleServiceClick = (service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedService(null);
+  };
+
+  const handleAddToCart = (service) => {
+    console.log('Added to cart:', service);
+    // Implement add to cart functionality here
   };
 
   return (
@@ -28,21 +63,13 @@ const Home = () => {
         
         {/* Services Container */}
         <div className="services-container" ref={containerRef}>
-          <div className="service-card">
-            <img src="path/to/personal-training.jpg" alt="Personal Training" />
-            <h3>Personal Training</h3>
-            <p>One-on-one coaching to help you achieve your fitness goals.</p>
-          </div>
-          <div className="service-card">
-            <img src="path/to/nutrition-guidance.jpg" alt="Nutritional Guidance" />
-            <h3>Nutritional Guidance</h3>
-            <p>Customized meal plans to complement your fitness routine.</p>
-          </div>
-          <div className="service-card">
-            <img src="\images\placeholder3.webp" alt="Program Design" />
-            <h3>Program Design</h3>
-            <p>Personalized training programs to fit your lifestyle and goals.</p>
-          </div>
+          {services.map((service, index) => (
+            <div key={index} className="service-card" onClick={() => handleServiceClick(service)}>
+              <img src={service.img} alt={service.title} />
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+          ))}
         </div>
       </section>
       
@@ -62,9 +89,17 @@ const Home = () => {
         <p>Contact us to schedule your first session and take the first step towards a better you.</p>
         <button>Contact Us</button>
       </section>
+
+      {/* Service Modal */}
+      {isModalOpen && (
+        <ServiceModal
+          service={selectedService}
+          onClose={handleCloseModal}
+          onAddToCart={handleAddToCart}
+        />
+      )}
     </div>
   );
 };
 
 export default Home;
-

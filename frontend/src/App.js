@@ -17,6 +17,7 @@ const App = () => {
   useEffect(() => {
     // Check if the user is logged in by checking the presence of an auth token
     const token = localStorage.getItem('authToken');
+    console.log('Auth toekn:', token); //debugging
     if (token) {
       setIsLoggedIn(true);
     }
