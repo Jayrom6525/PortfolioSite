@@ -17,17 +17,17 @@ const Home = () => {
 
   const services = [
     {
-      img: 'path/to/personal-training.jpg',
+      img: '/images/personal-training.webp',
       title: 'Personal Training',
       description: 'One-on-one coaching to help you achieve your fitness goals.',
     },
     {
-      img: 'path/to/nutrition-guidance.jpg',
+      img: '/images/nutrition.webp',
       title: 'Nutritional Guidance',
       description: 'Customized meal plans to complement your fitness routine.',
     },
     {
-      img: 'path/to/program-design.jpg',
+      img: 'images/program.webp',
       title: 'Program Design',
       description: 'Personalized training programs to fit your lifestyle and goals.',
     },
