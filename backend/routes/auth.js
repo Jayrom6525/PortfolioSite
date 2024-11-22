@@ -2,7 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const pool = require('../config/db');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
+require('dotenv').config();// loading enviorment variables 
 
 // Registration endpoint
 router.post('/register', async (req, res) => {
@@ -48,8 +50,11 @@ router.post('/login', (req, res, next) => {
             if (err) {
                 return next(err);
             }
+
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
             // Send success message after login
-            res.json({ message: 'User logged in successfully', user: user });
+            res.json({ message: 'User logged in successfully', token: token });
         });
     })(req, res, next);
 });
