@@ -12,6 +12,9 @@ const Cart = ({ isLoggedIn }) => {
       try {
         const response = await fetch('http://localhost:5000/cart', {
           method: 'GET',
+          headers : {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Add the auth token to the headers
+          },
           credentials: 'include',
         });
         const data = await response.json();
@@ -33,6 +36,9 @@ const Cart = ({ isLoggedIn }) => {
     try {
       await fetch(`http://localhost:5000/cart/${serviceId}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+        },
         credentials: 'include',
       });
       setCartItems(cartItems.filter(item => item.id !== serviceId));

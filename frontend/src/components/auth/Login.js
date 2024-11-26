@@ -9,7 +9,7 @@ const Login = ({ setIsLoggedIn }) => {
   const [error, setError] = useState(null); // To handle error messages
   const navigate = useNavigate(); // For programmatic navigation
 
-  // Dummy login logic, replace with an actual API call to backend
+  
   const loginUser = async (email, password) => {
     try {
       const response = await fetch('http://localhost:5000/login', {
