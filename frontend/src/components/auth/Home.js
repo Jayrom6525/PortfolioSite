@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import '../styles/home.css'; // Import home styles
 import ServiceModal from '../ServiceModal';
 
-const Home = () => {
+const Home = ({ handleAddToCart, isLoggedIn }) => {
   const containerRef = useRef(null); // Reference for scroll container
   const [selectedService, setSelectedService] = useState(null); // State for selected service
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
@@ -41,11 +41,6 @@ const Home = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedService(null);
-  };
-
-  const handleAddToCart = (service) => {
-    console.log('Added to cart:', service);
-    // Implement add to cart functionality here
   };
 
   return (
@@ -96,6 +91,7 @@ const Home = () => {
           service={selectedService}
           onClose={handleCloseModal}
           onAddToCart={handleAddToCart}
+          isLoggedIn={isLoggedIn}
         />
       )}
     </div>

@@ -33,6 +33,10 @@ const App = () => {
   };
 
   const handleAddToCart = (service) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
     setCartItems([...cartItems, service]);
   };
 
@@ -42,9 +46,9 @@ const App = () => {
         John Romagno Personal Training
       </header>
       
-      <NavBar isLoggedIn={isLoggedIn} handleLogout={handleLogout} cartItemCount={cartItems.length}/>
+      <NavBar isLoggedIn={isLoggedIn} handleLogout={handleLogout} cartItemCount={cartItems.length} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home handleAddToCart={handleAddToCart} isLoggedIn={isLoggedIn} />} /> {/* Pass handleAddToCart and isLoggedIn to Home */}
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
