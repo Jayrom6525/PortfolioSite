@@ -24,6 +24,7 @@ const ServiceModal = ({ service, onClose, onAddToCart, isLoggedIn }) => {
         credentials: 'include',
       });
       if (response.ok) {
+        console.log('Item added to cart:', service);
         onAddToCart(service);
       } else {
         console.error('Error adding item to cart');

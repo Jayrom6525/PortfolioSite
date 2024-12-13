@@ -37,6 +37,7 @@ const App = () => {
       navigate('/login');
       return;
     }
+    console.log('Adding item to cart:', service); //debugging
     setCartItems([...cartItems, service]);
   };
 

@@ -6,6 +6,7 @@ const passport = require('passport'); // For authentication
 const LocalStrategy = require('passport-local').Strategy; // Local authentication strategy
 const pool = require('./config/db'); // Import the pool instance from pg
 const authRoutes = require('./routes/auth'); // Import the auth routes
+const cartRoutes = require('./routes/cart'); // Import the cart routes
 const bcrypt = require('bcryptjs'); // For password hashing
 
 const app = express();
@@ -81,6 +82,7 @@ passport.deserializeUser(async (id, done) => {
 
 // Use the auth routes
 app.use('/', authRoutes);
+app.use('/', cartRoutes);
 
 // Basic route (can be used to check if the server is running)
 app.get('/', (req, res) => {
